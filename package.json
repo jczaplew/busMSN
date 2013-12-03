@@ -1,0 +1,25 @@
+{
+  "name": "busmsn",
+  "version": "0.0.1",
+  "description": "Bookmarkable location-aware bus times",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "smsmybus",
+    "node",
+    "open",
+    "data",
+    "buses",
+    "madison",
+    "wi"
+  ],
+  "author": "John J Czaplewski",
+  "license": "CC0",
+  "dependencies": {
+    "express": "3.x",
+    "mustache": "latest",
+    "consolidate": "latest"
+  }
+}
