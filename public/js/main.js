@@ -144,7 +144,7 @@ d3.select(".bookmark").on("click", function() {
   if (selectedStops.length < 1) {
     return alert("Please select at least one stop");
   } else {
-    var url = "/#/";
+    var url = "/a/";
 
     selectedStops.forEach(function(d) {
       url += d + "/";
