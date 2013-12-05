@@ -1,5 +1,6 @@
 var express = require('express'),
   cons = require('consolidate'),
+  routes = require('./routes/router'),
   app = express();
 
 app.use(express.logger());
@@ -12,19 +13,22 @@ app.set('view engine', 'html');
  
 // Identify where the view templates live
 app.set('views', __dirname + '/views');
+app.use(app.router);
 
 // Point the server to static files in the /public dir
 app.use(express.static(__dirname + '/public'));
+
 
 // GZIP responses
 app.use(express.compress());
 
 app.enable('trust proxy');
 
-// Simple page routes
-app.get('/', function(req, res) {
-  res.send("Up and running");
-});
+// Page routes
+app.get('/', routes.root);
+app.get('/a/:arrivals?*', routes.arrivals);
+app.get('/location', routes.loadArrivals);
+app.get('/times', routes.times);
 
 // Handle 404
 app.use(function(req, res) {

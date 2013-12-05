@@ -1,0 +1,101 @@
+<!DOCTYPE>
+<html lang="en" xml:lang="en" xmlns= "http://www.w3.org/1999/xhtml">
+  <head>
+    <title>busMSN</title>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="author" content="John J Czaplewski"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="css/jquery.mmenu.css" />
+    <link href='http://fonts.googleapis.com/css?family=Raleway:200' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/ionicons.min.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+  </head>
+
+  <body>
+    <div class="container" id="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+          <p class="navbar-brand">busMSN</p>
+        </div>
+      </div> <!-- end navbar -->
+
+      <div class="row">
+        <div class="col-sm-12 visible-sm visible-md visible-lg">
+          <div class="col-sm-9">
+            <p>Taking the bus used to be complicated by conflicts between schedules and reality, but in recent years large steps have been taken to allow riders to access real-time arrival data via a variety of platforms. busMSN builds on the premise of using <a href="http://api.smsmybus.com/">open data</a> to simplify public transit for all, regardless of which platform you choose.</p>
+          </div>
+          <div class="col-sm-3 wwh"><h1>What</h1></div>
+        </div>
+        <div class="col-sm-12 visible-xs">
+          <div class="col-sm-3 wwh"><h1>What</h1></div>
+          <div class="col-sm-9">
+            <p>Taking the bus used to be complicated by conflicts between schedules and reality, but in recent years large steps have been taken to allow riders to access real-time arrival data via a variety of platforms. busMSN builds on the premise of using <a href="http://api.smsmybus.com/">open data</a> to simplify public transit for all, regardless of which platform you choose.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="col-sm-3 wwh"><h1>Why</h1></div>
+          <div class="col-sm-9">
+            <p>If you want to know how to get from A to B via public transit, which routes arrive at certain stops, or when a bus may arrive, there are myriad options available. However, most people use the same handful of stops every day, and know which buses to take, making directions and a map-based interface irrelevant. With busMSN, stops only need to be selected once before the most relevant data is delivered to you in a single click.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 visible-sm visible-md visible-lg">
+          <div class="col-sm-9">
+            <p>The premise is simple: select the stops you use on a regular basis (for example, work and home) and bookmark the resultant page on all of your devices. When you open busMSN, the closest stop to your current location will be displayed with live bus arrival information.</p>
+          </div>
+          <div class="col-sm-3 wwh"><h1>How</h1></div>
+        </div>
+        <div class="col-sm-12 visible-xs">
+          <div class="col-sm-3 wwh"><h1>How</h1></div>
+          <div class="col-sm-9">
+            <p>The premise is simple: select the stops you use on a regular basis (for example, work and home) and bookmark the resultant page on all of your devices. When you open busMSN, the closest stop to your current location will be displayed with live bus arrival information.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="col-sm-4 get-started">
+            <h1>Get Started</h1>
+            <ol class="get-started-list">
+              <li>Click the stops on the map you use the most</li>
+              <li>When you are done, click "Create bookmark"</li>
+              <li>Bookmark the page on all your devices</li>
+            </ol>
+
+            <div class="selected-stops-div">
+              <h3>Selected stops</h3>
+              <table class="table">
+                <tbody class="selected-stops"></tbody>
+              </table>
+            </div>
+            <button class="btn btn-primary bookmark">Create bookmark</button>
+          </div>
+          <div class="col-sm-8">
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+   <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.5/jquery.hammer.min.js"></script>-->
+    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

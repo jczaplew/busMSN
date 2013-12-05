@@ -1,0 +1,142 @@
+#container {
+  width:100%;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+}
+.navbar-default {
+  background-color:#fff;
+}
+.navbar-header {
+  float:none;
+  padding-left: 1em;
+}
+.navbar-brand {
+  width:93%;
+  text-align: center;
+  padding-bottom: 0;
+  padding-top:18px;
+  font-weight: 200;
+  letter-spacing: 3px;
+  font-size: 1.9em;
+  line-height: 35px;
+}
+.row {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 2.5em;
+}
+.arrivalRow {
+  padding: 0.3em;
+}
+
+h1 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 46px;
+  margin:0 auto;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+}
+
+#map {
+  height:500px;
+}
+
+.wwh {
+  text-align: center;
+}
+.get-started {
+  text-align: center;
+}
+.get-started > h1 {
+  padding-bottom: 12px;
+}
+.get-started-list {
+  margin-left: -15px;
+  text-align: left;
+  padding-bottom: 12px;
+}
+.leaflet-popup-content {
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+}
+.selected-stops-div {
+  display: none;
+  padding-bottom: 12px;
+}
+.selected-stops-div > h3 {
+  font-family: 'Raleway', sans-serif;
+}
+.selected-stops-div > ul > li {
+  font-family: 'Open Sans', sans-serif;
+}
+.remove {
+  font-size: 1.2em;
+  float:right;
+  color:#C06F4E;
+}
+.remove:hover {
+  color:#ae5e3e;
+  cursor: pointer;
+}
+
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td { 
+  border-top: none; 
+ }
+.ion-navicon {
+  font-size: 4em;
+  float:left;
+  color:#777;
+}
+.mm-list * {
+  font-family: 'Raleway', sans-serif;
+}
+.mm-panel {
+  margin-top:2em;
+}
+.mm-ismenu {
+  background:#fff;
+}
+.mm-menu {
+  color:#777;
+}
+.mm-list, .mm-list > li {
+  padding:12px;
+  font-size: 1.1em;
+  margin-left:0.3em;
+}
+
+.primaryContent {
+  visibility: hidden;
+}
+#firstArrivalHolder {
+  text-align: center;
+}
+.arrival {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+  color: #777;
+}
+#first {
+  font-size: 9em;
+}
+#nextArrivalTable {
+  text-align: center;
+}
+#loading {
+  font-size: 5em;
+  color: #aaa;
+  position: absolute;
+  left: 47%;
+  visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  .row {
+    padding:1em;
+  }
+  .wwh {
+    padding-bottom: 1em;
+  }
+}

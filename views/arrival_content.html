@@ -1,0 +1,28 @@
+<div id="firstArrivalHolder">
+  <div class="col-sm-12 primaryContent">
+    <h3 class="arrival" id="firstRoute">
+      Route {{firstBus.routeID}} in
+    </h3>
+    <h1 class="arrival" id="first">
+      {{firstBus.minutes}}
+    </h1>
+    <p id="minutes">minutes</p>
+  </div>
+  <div class="col-sm-4 col-sm-offset-4 primaryContent" id="nextArrivals">
+    <table class="table">
+      <tbody id="nextArrivalTable">
+        {{#closestStop.routes}}<tr><td>Route {{routeID}}</td><td>{{minutes}} minutes</td></tr>{{/closestStop.routes}}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<nav id="menu-left" class="col-sm-5">
+  <ul>
+    {{#selectStops}}
+    <li><a href="#" class="stop" id="{{id}}">{{name}}</a></li>
+    {{/selectStops}}
+  </ul>
+</nav>
+
+<div id="closestStop" style="display:none;">{{closestStop.name}}</div>
