@@ -1,0 +1,51 @@
+.ion-navicon {
+  font-size: 4em;
+  float:left;
+  color:#777;
+}
+.mm-list * {
+  font-family: 'Raleway', sans-serif;
+}
+.mm-panel {
+  margin-top:2em;
+}
+.mm-ismenu {
+  background:#fff;
+}
+.mm-menu {
+  color:#777;
+}
+.mm-list, .mm-list > li {
+  padding:12px;
+  font-size: 1.1em;
+  margin-left:0.3em;
+}
+
+.arrivalRow {
+  padding: 0.3em;
+}
+
+.primaryContent {
+  visibility: hidden;
+}
+#firstArrivalHolder {
+  text-align: center;
+}
+.arrival {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+  color: #777;
+}
+#first {
+  font-size: 9em;
+}
+#nextArrivalTable {
+  text-align: center;
+}
+#loading {
+  font-size: 5em;
+  color: #aaa;
+  position: absolute;
+  left: 47%;
+  visibility: hidden;
+}

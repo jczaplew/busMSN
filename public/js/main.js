@@ -1,157 +1,181 @@
-var selectedStops = [],
-    selectedMarkers = {};
+(function() { 
+  var selectedStops = [],
+      selectedMarkers = {},
+      stopLayer;
 
-var southWest = L.latLng(42.948381, -89.6044),
-  northEast = L.latLng(43.1991, -89.17327),
-  bounds = L.latLngBounds(southWest, northEast);
+  var southWest = L.latLng(42.9483, -89.6044),
+    northEast = L.latLng(43.1991, -89.1732),
+    bounds = L.latLngBounds(southWest, northEast);
 
-var map = new L.map("map", {
-  center: new L.LatLng(43.071772, -89.398155),
-  zoom:13,
-  minZoom:12,
-  maxZoom:18,
-  zoomControl: false,
-  maxBounds: bounds
-});
-
-var attrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-
-var stamenLabels = new L.TileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: attrib}).addTo(map);
-
-var style = {
-  radius:3,
-  fillColor: "#719fbd",
-  color: "#6597B8",
-  weight: 2.5,
-  opacity: 1,
-  fillOpacity: 0.95
-};
-
-function parseStops(feature, layer) {
-  layer.bindPopup(feature.properties.name);
-}
-
-d3.json("js/stops.geojson", function(err, data) {
-  stopLayer = L.featureGroup();
-
-  data.features.forEach(function(d) {
-    var latlng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0]),
-        marker = new L.circleMarker(latlng, style).addTo(map);
-
-    marker.bindPopup(d.properties.name + "[" + d.properties.id + "]<br><br><button class='btn btn-primary btn-sm select'>Select</button>");
-
-    marker.data = d.properties;
-    stopLayer.addLayer(marker);
-  });
-  
-  stopLayer.addTo(map);
-});
-
-d3.selectAll(".select")
-  .on("click", function(d) {
-    openMarker.setStyle({
-      color:"#60AB6E",
-      fillColor: "#6bb178"
-    });
+  var map = new L.map("map", {
+    center: new L.LatLng(43.071772, -89.398155),
+    zoom:13,
+    minZoom:12,
+    maxZoom:18,
+    zoomControl: false,
+    maxBounds: bounds
   });
 
-map.on("zoomend", function() {
-  console.log("fired");
+  var attrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 
-  var zoom = map.getZoom(),
-      scaler;
+  var stamenLabels = new L.TileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: attrib}).addTo(map);
 
-  switch(zoom) {
-    case 13: 
-      scaler = 3;
-      break;
-    case 14:
-      scaler = 3.5;
-      break;
-    case 15:
-      scaler = 5;
-      break;
-    case 16:
-      scaler = 8;
-      break;
-    case 17:
-      scaler = 13;
-      break;
-    case 18:
-      scaler = 15;
-      break;
-    default:
-      scaler = 2;
-      break;
+  // Get location
+  var options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
   };
 
-  console.log("zoom = ", zoom, " scaler = ", scaler);
+  navigator.geolocation.getCurrentPosition(locationFound, locationError, options);
 
-  stopLayer.eachLayer(function(d) {
-    d.setRadius(scaler);
-  });
-});
+  function locationFound(pos) {
+    if (pos.coords.latitude > 42.948381 && pos.coords.latitude < 43.1991 && pos.coords.longitude > -89.6044 && pos.coords.longitude < -89.1732) {
+      map.setView([pos.coords.latitude, pos.coords.longitude], 16);
+    }
+  }
 
-map.on("popupopen", function(e) {
-  var openMarker = e.popup._source;
+  function locationError() {
+    // Meh
+  }
 
-  d3.selectAll(".select")
-    .on("click", function(d) {
-      if (selectedStops.indexOf(openMarker.data.id) < 0) {
-        map.closePopup();
+  var style = {
+    radius:3,
+    fillColor: "#719fbd",
+    color: "#6597B8",
+    weight: 2.5,
+    opacity: 1,
+    fillOpacity: 0.95
+  };
 
-        if (selectedStops.length < 1) {
-          d3.select(".selected-stops-div").style("display", "block");
-        }
-        
-        selectedStops.push(openMarker.data.id);
+  function parseStops(feature, layer) {
+    layer.bindPopup(feature.properties.name);
+  }
 
-        selectedMarkers[openMarker.data.id] = openMarker;
+  d3.json("js/stops.geojson", function(err, data) {
+    stopLayer = L.featureGroup();
 
-        d3.select(".selected-stops").append("tr").append("td")
-          .html(openMarker.data.name + "<i class='ion-ios7-minus-outline remove'></i>")
-          .attr("id", openMarker.data.id);
+    data.features.forEach(function(d) {
+      var latlng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0]),
+          marker = new L.circleMarker(latlng, style).addTo(map);
 
-        d3.selectAll(".remove")
-          .on("click", function(d) {
-            var parent = d3.select(this).node().parentNode,
-                id = d3.select(parent).attr("id"),
-                index = selectedStops.indexOf(id);
+      marker.bindPopup(d.properties.name + "[" + d.properties.id + "]<br><br><button class='btn btn-primary btn-sm select'>Select</button>");
 
-            selectedMarkers[id].setStyle({fillColor: "#719fbd",color: "#6597B8"});
-
-            // Clean up
-            selectedStops.splice(index, 1);
-            delete selectedMarkers[id];
-            d3.select(this).node().parentNode.remove();
-
-            if (selectedStops.length < 1) {
-              d3.select(".selected-stops-div").style("display", "none");
-            }
-
-          });
-
-        openMarker.setStyle({
-          color:"#60AB6E",
-          fillColor: "#6bb178"
-        });
-      }
-      
-    });
-});
-
-d3.select(".bookmark").on("click", function() {
-  if (selectedStops.length < 1) {
-    return alert("Please select at least one stop");
-  } else {
-    var url = "/a/";
-
-    selectedStops.forEach(function(d) {
-      url += d + "/";
+      marker.data = d.properties;
+      stopLayer.addLayer(marker);
     });
     
-    url = url.substring(0, url.length - 1);
+    stopLayer.addTo(map);
+  });
 
-    window.location = url;
-  }
-});
+  map.on("zoomend", function() {
+    var zoom = map.getZoom(),
+        scaler;
+
+    switch(zoom) {
+      case 13: 
+        scaler = 3;
+        break;
+      case 14:
+        scaler = 3.5;
+        break;
+      case 15:
+        scaler = 5;
+        break;
+      case 16:
+        scaler = 8;
+        break;
+      case 17:
+        scaler = 13;
+        break;
+      case 18:
+        scaler = 15;
+        break;
+      default:
+        scaler = 2;
+        break;
+    };
+
+    stopLayer.eachLayer(function(d) {
+      d.setRadius(scaler);
+    });
+  });
+
+  map.on("popupopen", function(e) {
+    var openMarker = e.popup._source;
+
+    d3.selectAll(".select")
+      .on("click", function(d) {
+        if (selectedStops.indexOf(openMarker.data.id) < 0) {
+          map.closePopup();
+
+          if (selectedStops.length < 1) {
+            d3.selectAll(".selected-stops-title").style("display", "block");
+          }
+          
+          selectedStops.push(openMarker.data.id);
+
+          selectedMarkers[openMarker.data.id] = openMarker;
+
+          d3.selectAll(".selected-stops").append("tr").append("td")
+            .html(openMarker.data.name + "<i class='ion-ios7-minus-outline remove'></i>")
+            .attr("id", "s" + openMarker.data.id);
+
+          d3.selectAll(".remove")
+            .on("click", function(d) {
+              // Get the context
+              var parent = d3.select(this).node().parentNode,
+                  id = d3.select(parent).attr("id").substr(1),
+                  index = selectedStops.indexOf(id);
+
+              // Color the selected marker
+              selectedMarkers[id].setStyle({fillColor: "#719fbd",color: "#6597B8"});
+
+              // Clean up
+              selectedStops.splice(index, 1);
+              delete selectedMarkers[id];
+              d3.selectAll("#s" + id).each(function(d) {
+                d3.select(this).node().parentNode.remove();
+              });
+
+              // Hide the heading if there aren't any stops selected
+              if (selectedStops.length < 1) {
+                d3.selectAll(".selected-stops-title").style("display", "none");
+              }
+
+            });
+
+          openMarker.setStyle({
+            color:"#60AB6E",
+            fillColor: "#6bb178"
+          });
+        }
+        
+      });
+  });
+  
+  // Listener for all the buttons in popups
+  d3.selectAll(".select")
+    .on("click", function(d) {
+      openMarker.setStyle({
+        color:"#60AB6E",
+        fillColor: "#6bb178"
+      });
+    });
+
+  d3.select(".bookmark").on("click", function() {
+    if (selectedStops.length < 1) {
+      return alert("Please select at least one stop");
+    } else {
+      var url = "/a/";
+
+      selectedStops.forEach(function(d) {
+        url += d + "/";
+      });
+      
+      url = url.substring(0, url.length - 1);
+
+      window.location = url;
+    }
+  });
+})();
