@@ -4,15 +4,23 @@ var busTimes = (function() {
       stops = [],
       selectedStop;
 
-
-  function locationError(error) {
-    alert("Error retrieving current location. Please refresh and allow the browser to access your location");
-  }
-
   function locationFound(position) {
     var lat = position.coords.latitude,
         lng = position.coords.longitude;
 
+    getData(lat,lng);
+  }
+
+  function locationError(error) {
+    alert("Error retrieving current location.");
+    // Default to ~ University & Park 
+    var lat = 43.07325,
+        lng = -89.40074;
+
+    getData(lat, lng);
+  }
+
+  function getData(lat, lng) {
     var loc = window.location,
         state = loc.pathname.substr(2);
       
@@ -25,7 +33,6 @@ var busTimes = (function() {
         requestedStops.push(item);
       };
     });
-
 
     $.ajax({
       url: '/location?lat=' + lat + '&lng=' + lng + '&stops=' + requestedStops.toString(),
@@ -44,7 +51,6 @@ var busTimes = (function() {
         });
       }
     });
-
   }
 
   return {
