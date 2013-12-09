@@ -3,23 +3,66 @@
   float:left;
   color:#777;
 }
-.mm-list * {
-  font-family: 'Raleway', sans-serif;
+.ion-navicon:active {
+  color:rgb(255, 153, 44);
 }
-.mm-panel {
+.snapjs-right .snap-drawer-left {
+    display: block;
+    right: 0;
+    left: auto;
+}
+
+.snapjs-right .snap-drawer-right {
+    display: none;
+}
+
+.snap-content {
+  background: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.snap-drawer-left-content {
   margin-top:2em;
 }
-.mm-ismenu {
-  background:#fff;
-}
-.mm-menu {
-  color:#777;
-}
-.mm-list, .mm-list > li {
+
+.snap-drawer-left-content > li {
   padding:12px;
   font-size: 1.1em;
   margin-left:0.3em;
 }
+
+.snap-drawers {
+  background: #fff;
+}
+
+.snap-drawer {
+  background: #fff;
+  color: #777;
+  font-family: 'Raleway', sans-serif;
+}
+
+.snap-drawer ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.snap-drawer li > a {
+  display: block;
+  border-bottom: 1px solid rgba(0,0,0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #777;
+  text-indent: 10px;
+}
+
+.nav-toggle-container {
+  display: table-cell;
+  vertical-align: middle;
+}
+
 
 .arrivalRow {
   padding: 0.3em;

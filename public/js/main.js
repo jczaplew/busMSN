@@ -30,6 +30,7 @@
   navigator.geolocation.getCurrentPosition(locationFound, locationError, options);
 
   function locationFound(pos) {
+    // If the user is not in the Madison area ignore their location
     if (pos.coords.latitude > 42.948381 && pos.coords.latitude < 43.1991 && pos.coords.longitude > -89.6044 && pos.coords.longitude < -89.1732) {
       map.setView([pos.coords.latitude, pos.coords.longitude], 16);
     }

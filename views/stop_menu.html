@@ -17,12 +17,10 @@
   </div>
 </div>
 
-<nav id="menu-left" class="col-sm-5">
-  <ul>
-    {{#selectStops}}
-    <li><a href="#" class="stop" id="{{id}}">{{name}}</a></li>
-    {{/selectStops}}
-  </ul>
-</nav>
+<ul id="selectStops">
+  {{#selectStops}}
+  <li><a href="#" class="stop" id="{{id}}">{{name}}</a></li>
+  {{/selectStops}}
+</ul>
 
 <div id="closestStop" style="display:none;">{{closestStop.name}}</div>

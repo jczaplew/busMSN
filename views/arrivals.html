@@ -1,11 +1,25 @@
 {{> header}}
 
   <body>
-     <div class="container">
+
+    <div class="snap-drawers">
+      <div class="snap-drawer snap-drawer-left">
+        <div class="snap-drawer-left-content" id="sidebarContent">
+          <!-- Stop list goes here -->
+        </div>
+      </div>
+      <div class="snap-drawer snap-drawer-right"></div>
+    </div>
+
+    <div class="container snap-content" id="content">
       <div class="navbar navbar-default navbar-static-top">
         <div class="navbar-header">
-          <a href="#menu-left" id="menu-toggle"><i class="icon ion-navicon"></i></a>
-          <p class="navbar-brand">busMSN</p>
+          <div class="nav-toggle-container">
+            <a href="#menu-left" id="menu-toggle"><i class="icon ion-navicon"></i></a>
+          </div>
+          <div class="navbar-brand-container">
+            <p class="navbar-brand">busMSN</p>
+          </div>
         </div>
       </div>
 

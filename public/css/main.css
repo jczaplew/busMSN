@@ -38,16 +38,21 @@ html, body {
 .navbar-header {
   float:none;
   padding-left: 1em;
+  display: table;
+  width:100%;
 }
-.navbar-brand {
-  width:93%;
+.navbar-brand-container {
+  width:100%;
   text-align: center;
   padding-bottom: 0;
-  padding-top:18px;
+  display: table-cell;
+  vertical-align: middle;
+}
+.navbar-brand {
+  float: none;
   font-weight: 200;
   letter-spacing: 3px;
   font-size: 1.9em;
-  line-height: 35px;
 }
 .row {
   margin-left: 0;
@@ -92,9 +97,12 @@ p {
   }
 }
 @media (max-width: 520px) {
-  .navbar-header {
-    width:85%;
+  .navbar-brand {
     font-size: 1.4em;
+    line-height: 1.2em;
+  }
+  .ion-navicon {
+    font-size: 3em;
   }
 }
 
