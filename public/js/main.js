@@ -41,7 +41,7 @@
   }
 
   var style = {
-    radius:3,
+    radius:10,
     fillColor: "#719fbd",
     color: "#6597B8",
     weight: 2.5,
@@ -69,38 +69,6 @@
     stopLayer.addTo(map);
   });
 
-  map.on("zoomend", function() {
-    var zoom = map.getZoom(),
-        scaler;
-
-    switch(zoom) {
-      case 13: 
-        scaler = 3;
-        break;
-      case 14:
-        scaler = 3.5;
-        break;
-      case 15:
-        scaler = 5;
-        break;
-      case 16:
-        scaler = 8;
-        break;
-      case 17:
-        scaler = 13;
-        break;
-      case 18:
-        scaler = 15;
-        break;
-      default:
-        scaler = 2;
-        break;
-    };
-
-    stopLayer.eachLayer(function(d) {
-      d.setRadius(scaler);
-    });
-  });
 
   map.on("popupopen", function(e) {
     var openMarker = e.popup._source;
