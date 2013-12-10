@@ -9,6 +9,7 @@ var busTimes = (function() {
   }
 
   function locationError(error) {
+  //TODO: Change this so that it asks if you want to try again or not.
     alert("Error retrieving current location.");
     // Default to ~ University & Park 
     var lat = 43.07325,
