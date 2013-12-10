@@ -49,7 +49,8 @@ var busTimes = (function() {
 
         $(".navbar-brand").html($("#closestStop").html());
 
-        $(".stop").on("click", function() {
+        $(".stop").on("click", function(event) {
+          event.preventDefault();
           var id = $(this).attr("id");
           $(".navbar-brand").html($(this).html());
           busTimes.goToStop(id);
