@@ -88,9 +88,11 @@
   text-align: center;
 }
 #loading {
-  font-size: 5em;
+  font-size: 8em;
   color: #aaa;
   position: absolute;
-  left: 47%;
+  width:100%;
+  text-align: center;
   visibility: hidden;
+  top: 35%;
 }

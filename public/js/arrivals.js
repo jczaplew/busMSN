@@ -1,22 +1,6 @@
 //#/0758/0581/0490
 var busTimes = (function() {
-
-  function locationFound(position) {
-    var lat = position.coords.latitude,
-        lng = position.coords.longitude;
-
-    getData(lat,lng);
-  }
-
-  function locationError(error) {
-  //TODO: Change this so that it asks if you want to try again or not.
-    alert("Error retrieving current location.");
-    // Default to ~ University & Park 
-    var lat = 43.07325,
-        lng = -89.40074;
-
-    getData(lat, lng);
-  }
+  var snapper;
 
   function getData(lat, lng) {
     var loc = window.location,
@@ -49,23 +33,32 @@ var busTimes = (function() {
 
         $(".navbar-brand").html($("#closestStop").html());
 
+        adjustFooter();
+
         $(".stop").on("click", function(event) {
           event.preventDefault();
           var id = $(this).attr("id");
           $(".navbar-brand").html($(this).html());
           busTimes.goToStop(id);
+          snapper.close();
         });
       }
     });
   }
 
+  function adjustFooter() {
+    $(".arrivalRow").css("padding-bottom", (window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 55) + "px");
+    $("#footer").css("visibility", "visible");
+  }
+
   return {
     "init": function() {
       $("#loading").css("visibility", "visible");
+      $("#footer").css("visibility", "hidden");
 
       FastClick.attach(document.body);
 
-      var snapper = new Snap({
+      snapper = new Snap({
           element: document.getElementById('content'),
           disable: 'right'
       });
@@ -93,21 +86,38 @@ var busTimes = (function() {
         }
       })(document, window.navigator, "standalone");
 
-      
-      var options = {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
+      busTimes.getPosition();
+    },
 
+    "getPosition": function() {
       // via https://groups.google.com/forum/#!topic/smsmybus-dev/xmJ-CUxxBn8
-      navigator.geolocation.getCurrentPosition(locationFound, locationError, options);
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          var lat = position.coords.latitude,
+              lng = position.coords.longitude;
+
+          getData(lat,lng);
+        },
+        function(error) {
+          //TODO: Change this so that it asks if you want to try again or not.
+          alert("Error retrieving current location.");
+          // Default to ~ University & Park 
+          var lat = 43.07325,
+              lng = -89.40074;
+
+          getData(lat, lng);
+        }, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 100
+      });
 
     },
 
     "goToStop": function(stop) {
       $("#loading").css("visibility", "visible");
-      //$('nav#menu-left').mmenu().trigger( "close.mm" );
+      $("#footer").css("visibility", "hidden");
+
       $(".primaryContent").css("visibility", "hidden");
 
       $.ajax({
@@ -115,6 +125,7 @@ var busTimes = (function() {
         success: function(data) {
           $("#firstArrivalHolder").html(data);
           $("#loading").css("visibility", "hidden");
+          adjustFooter();
           $(".primaryContent").css("visibility", "visible");
         }
       });
@@ -148,6 +159,8 @@ var busTimes = (function() {
 
       $("#loading").css("visibility", "hidden");
       $(".primaryContent").css("visibility", "visible");
+
+      adjustFooter();
     }
   }
 
