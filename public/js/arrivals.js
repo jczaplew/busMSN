@@ -1,22 +1,18 @@
-//#/0758/0581/0490
+//TODO: Clean up jQUery hell
 var busTimes = (function() {
   var snapper;
 
   function getData(lat, lng) {
     var loc = window.location,
-        state = loc.pathname.substr(2);
-      
-    var path = state.split("/");
-
-    var requestedStops = [];
+        state = loc.pathname.substr(2),
+        path = state.split("/"),
+        requestedStops = [];
 
     path.forEach(function(item) {
       if (item.length > 1) {
         requestedStops.push(item);
       };
     });
-
-    // If no stops, render an error
 
     $.ajax({
       url: '/location?lat=' + lat + '&lng=' + lng + '&stops=' + requestedStops.toString(),
@@ -33,7 +29,7 @@ var busTimes = (function() {
 
         $(".navbar-brand").html($("#closestStop").html());
 
-        adjustFooter();
+        //adjustFooter();
 
         $(".stop").on("click", function(event) {
           event.preventDefault();
@@ -116,7 +112,7 @@ var busTimes = (function() {
 
     "goToStop": function(stop) {
       $("#loading").css("visibility", "visible");
-      $("#footer").css("visibility", "hidden");
+      //$("#footer").css("visibility", "hidden");
 
       $(".primaryContent").css("visibility", "hidden");
 
@@ -125,7 +121,7 @@ var busTimes = (function() {
         success: function(data) {
           $("#firstArrivalHolder").html(data);
           $("#loading").css("visibility", "hidden");
-          adjustFooter();
+          //adjustFooter();
           $(".primaryContent").css("visibility", "visible");
         }
       });
@@ -160,7 +156,7 @@ var busTimes = (function() {
       $("#loading").css("visibility", "hidden");
       $(".primaryContent").css("visibility", "visible");
 
-      adjustFooter();
+      //adjustFooter();
     }
   }
 
