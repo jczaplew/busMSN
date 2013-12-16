@@ -53,6 +53,7 @@ var busTimes = (function() {
   }
 
   function drawMap(lat, lng) {
+    // From https://gist.github.com/mbostock/5616813
     d3.select("#sidebarContent svg").remove();
 
     var lat = parseFloat(lat),
