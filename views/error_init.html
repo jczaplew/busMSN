@@ -1,0 +1,13 @@
+<div class="col-sm-12 primaryContent">
+  <h3 class="arrival" id="firstRoute">
+    {{message}}
+  </h3>
+</div>
+
+<ul id="selectStops">
+  {{#selectStops}}
+  <li><a href="#" class="stop" id="{{id}}" data-lat="{{lat}}" data-lng="{{lng}}">{{name}}</a></li>
+  {{/selectStops}}
+</ul>
+
+<div id="closestStop" style="display:none;" data-lat="{{closestStop.lat}}" data-lng="{{closestStop.lng}}">{{closestStop.name}}</div>

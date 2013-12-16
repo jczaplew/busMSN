@@ -31,12 +31,17 @@ var busTimes = (function() {
 
         //adjustFooter();
 
+        drawMap($("#closestStop").attr("data-lat"), $("#closestStop").attr("data-lng"));
+
         $(".stop").on("click", function(event) {
           event.preventDefault();
+          $(".snap-drawer li > a").css("color", "#777");
+          $(this).css("color", "#FF992C");
           var id = $(this).attr("id");
           $(".navbar-brand").html($(this).html());
           busTimes.goToStop(id);
           snapper.close();
+          drawMap($(this).attr("data-lat"), $(this).attr("data-lng"));
         });
       }
     });
@@ -45,6 +50,53 @@ var busTimes = (function() {
   function adjustFooter() {
     $(".arrivalRow").css("padding-bottom", (window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 55) + "px");
     $("#footer").css("visibility", "visible");
+  }
+
+  function drawMap(lat, lng) {
+    d3.select("#sidebarContent svg").remove();
+
+    var lat = parseFloat(lat),
+        lng = parseFloat(lng);
+
+    var width = $(".snap-drawer-left").width(),
+        height = window.innerHeight - 25;
+
+    var tiler = d3.geo.tile()
+        .size([width, height]);
+
+    var projection = d3.geo.mercator()
+        .center([lng, lat])
+        .scale((1 << 23) / 2 / Math.PI)
+        .translate([width / 2, height / 1.4]);
+
+    var path = d3.geo.path()
+        .projection(projection);
+
+    var svg = d3.select("#sidebarContent").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    svg.selectAll("g")
+        .data(tiler
+          .scale(projection.scale() * 2 * Math.PI)
+          .translate(projection([0, 0])))
+      .enter().append("g")
+        .each(function(d) {
+          var g = d3.select(this);
+          d3.json("http://" + ["a", "b", "c"][(d[0] * 31 + d[1]) % 3] + ".tile.openstreetmap.us/vectiles-highroad/" + d[2] + "/" + d[0] + "/" + d[1] + ".json", function(error, json) {
+            g.selectAll("path")
+                .data(json.features.sort(function(a, b) { return a.properties.sort_key - b.properties.sort_key; }))
+              .enter().append("path")
+                .attr("class", function(d) { return d.properties.kind; })
+                .attr("d", path);
+          });
+        });
+
+    svg.append("circle")
+      .attr("r",5)
+      .attr("fill", "#719fbd")
+      .attr("stroke", "#6597B8")
+      .attr("transform", "translate(" + projection([lng, lat]) + ")");
   }
 
   return {
@@ -130,33 +182,6 @@ var busTimes = (function() {
   //TODO: not currently used. Hook it up to the UI somehow
     "refresh": function() {
       busTimes.goToStop(busTimes.selectedStop);
-    },
-
-    "noneFound": function() {
-      $("#firstRoute").html("No buses found");
-      $("#first").html("");
-      $("#nextArrivalTable").html("");
-      $("#minutes").css("visibility", "hidden");
-      $("#loading").css("visibility", "hidden");
-      $(".primaryContent").css("visibility", "visible");
-    },
-
-    "routesFound": function(stop) {
-      $("#firstRoute").html("Route " + stop.routes[0].routeID + " in");
-      $("#first").html(stop.routes[0].minutes);
-
-      $("#minutes").css("visibility", "visible");
-
-      var template = '{{#routes}}<tr><td>Route {{routeID}}</td><td>{{minutes}} minutes</td></tr>{{/routes}}';
-  
-      var output = Mustache.render(template, stop);
-
-      $("#nextArrivalTable").html(output);
-
-      $("#loading").css("visibility", "hidden");
-      $(".primaryContent").css("visibility", "visible");
-
-      //adjustFooter();
     }
   }
 
