@@ -12,6 +12,8 @@ results
 
 npm-debug.log
 
+routes/apiKey.js
+
 .DS_Store
 .AppleDouble
 .LSOverride

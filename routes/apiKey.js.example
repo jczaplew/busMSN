@@ -1,0 +1,2 @@
+// Get your own key @ http://api.smsmybus.com/
+exports.apiKey = 'your_key_here';

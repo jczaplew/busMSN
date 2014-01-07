@@ -149,4 +149,7 @@
       window.location = url;
     }
   });
+
+  // Show the footer
+  d3.select("#footer").style("visibility", "visible");
 })();

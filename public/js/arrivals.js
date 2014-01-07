@@ -14,6 +14,11 @@ var busTimes = (function() {
       };
     });
 
+    $("#refresh").on("click", function() {
+      var currentStop = $(".navbar-brand").attr("id");
+      busTimes.goToStop(currentStop);
+    });
+
     $.ajax({
       url: '/location?lat=' + lat + '&lng=' + lng + '&stops=' + requestedStops.toString(),
       success: function(data) {
@@ -27,9 +32,11 @@ var busTimes = (function() {
         $("#loading").css("visibility", "hidden");
         $(".primaryContent").css("visibility", "visible");
 
-        $(".navbar-brand").html($("#closestStop").html());
+        $(".navbar-brand")
+          .html($("#closestStop").html())
+          .attr("id", $("#closestStop").attr("data-stopid"));
 
-        //adjustFooter();
+        adjustFooter();
 
         drawMap($("#closestStop").attr("data-lat"), $("#closestStop").attr("data-lng"));
 
@@ -39,6 +46,7 @@ var busTimes = (function() {
           $(this).css("color", "#FF992C");
           var id = $(this).attr("id");
           $(".navbar-brand").html($(this).html());
+          $(".navbar-brand").attr("id", $(this).attr("id"));
           busTimes.goToStop(id);
           snapper.close();
           drawMap($(this).attr("data-lat"), $(this).attr("data-lng"));
@@ -48,7 +56,16 @@ var busTimes = (function() {
   }
 
   function adjustFooter() {
-    $(".arrivalRow").css("padding-bottom", (window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 55) + "px");
+    $(".arrivalRow").css("padding-bottom", function() {
+      var height = (window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 55);
+      if ($(".arrivalRow").height() > window.innerHeight) {
+        console.log("returning 0");
+        return "0";
+      } else {
+        console.log("returning margin");
+        return height + "px";
+      }
+    });
     $("#footer").css("visibility", "visible");
   }
 
@@ -103,7 +120,7 @@ var busTimes = (function() {
   return {
     "init": function() {
       $("#loading").css("visibility", "visible");
-      $("#footer").css("visibility", "hidden");
+      //$("#footer").css("visibility", "hidden");
 
       FastClick.attach(document.body);
 
@@ -165,7 +182,7 @@ var busTimes = (function() {
 
     "goToStop": function(stop) {
       $("#loading").css("visibility", "visible");
-      //$("#footer").css("visibility", "hidden");
+      $("#footer").css("visibility", "hidden");
 
       $(".primaryContent").css("visibility", "hidden");
 
@@ -174,15 +191,10 @@ var busTimes = (function() {
         success: function(data) {
           $("#firstArrivalHolder").html(data);
           $("#loading").css("visibility", "hidden");
-          //adjustFooter();
+          adjustFooter();
           $(".primaryContent").css("visibility", "visible");
         }
       });
-    },
-
-  //TODO: not currently used. Hook it up to the UI somehow
-    "refresh": function() {
-      busTimes.goToStop(busTimes.selectedStop);
     }
   }
 

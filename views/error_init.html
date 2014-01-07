@@ -1,7 +1,9 @@
-<div class="col-sm-12 primaryContent">
-  <h3 class="arrival" id="firstRoute">
-    {{message}}
-  </h3>
+<div id="firstArrivalHolder">
+  <div class="col-sm-12 primaryContent">
+    <h3 class="arrival" id="firstRoute">
+      {{message}}
+    </h3>
+  </div>
 </div>
 
 <ul id="selectStops">
@@ -10,4 +12,4 @@
   {{/selectStops}}
 </ul>
 
-<div id="closestStop" style="display:none;" data-lat="{{closestStop.lat}}" data-lng="{{closestStop.lng}}">{{closestStop.name}}</div>
+<div id="closestStop" style="display:none;" data-lat="{{closestStop.lat}}" data-lng="{{closestStop.lng}}" data-stopid="{{closestStop.id}}">{{closestStop.name}}</div>
