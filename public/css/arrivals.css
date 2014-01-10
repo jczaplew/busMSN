@@ -102,6 +102,10 @@
   font-size: 9em;
 }
 
+#nextArrivals > table {
+  margin-left: -20px;
+}
+
 #nextArrivalTable {
   text-align: center;
 }
@@ -131,7 +135,17 @@
 #refresh:active {
   color:rgb(255, 153, 44);
 }
-
+#countdown {
+  position: absolute;
+  font-size: 9px;
+  color: #999;
+  right: 3.16em;
+  top: 3.7em;
+  cursor: pointer;
+}
+#countdown:active {
+  color:rgb(255, 153, 44);
+}
 small {
   font-size: 75%;
 }
