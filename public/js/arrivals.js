@@ -1,6 +1,7 @@
 //TODO: Clean up jQUery hell
 var busTimes = (function() {
-  var snapper;
+  var snapper,
+      countdown;
 
   function getData(lat, lng) {
     var loc = window.location,
@@ -14,7 +15,7 @@ var busTimes = (function() {
       };
     });
 
-    $("#refresh").on("click", function() {
+    $("#refresh, #countdown").on("click", function() {
       var currentStop = $(".navbar-brand").attr("id");
       busTimes.goToStop(currentStop);
     });
@@ -38,6 +39,8 @@ var busTimes = (function() {
 
         adjustFooter();
 
+        busTimes.setTimer();
+
         drawMap($("#closestStop").attr("data-lat"), $("#closestStop").attr("data-lng"));
 
         $(".stop").on("click", function(event) {
@@ -59,10 +62,8 @@ var busTimes = (function() {
     $(".arrivalRow").css("padding-bottom", function() {
       var height = (window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 55);
       if ($(".arrivalRow").height() > window.innerHeight) {
-        console.log("returning 0");
         return "0";
       } else {
-        console.log("returning margin");
         return height + "px";
       }
     });
@@ -181,6 +182,7 @@ var busTimes = (function() {
     },
 
     "goToStop": function(stop) {
+      busTimes.stopTimer();
       $("#loading").css("visibility", "visible");
       $("#footer").css("visibility", "hidden");
 
@@ -193,9 +195,46 @@ var busTimes = (function() {
           $("#loading").css("visibility", "hidden");
           adjustFooter();
           $(".primaryContent").css("visibility", "visible");
+          busTimes.setTimer();
         }
       });
-    }
+    },
+
+    "setTimer": function() {
+      $("#countdown")
+        .css("right", "3.16em")
+        .show();
+
+      var start = new Date().getTime(),
+          refresh = start + 61000;
+
+      countdown = setInterval(function() {
+        var current = new Date().getTime();
+        $("#countdown").html(parseInt((refresh - current)/1000));
+
+        if(parseInt((refresh - current)/1000) === 9) {
+          $("#countdown").css("right", "3.36em");
+        }
+
+        if ((refresh - current) < 1) {
+          $("#countdown").hide();
+          clearInterval(countdown);
+          busTimes.goToStop($(".navbar-brand").attr("id"));
+        }
+      }, 1000);
+    },
+
+    "stopTimer": function() {
+      clearInterval(countdown);
+      $("#countdown").hide();
+    },
+
+    "resetTimer": function() {
+      clearInterval(countdown);
+      busTimes.setTimer();
+    },
+
+    "countdown": countdown
   }
 
 })();
