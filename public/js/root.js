@@ -71,6 +71,10 @@
     stopLayer.addTo(map);
   });
 
+  d3.select("#loadingRoot").style("display", "none");
+
+  d3.select("#map").style("visibility", "visible");
+
 
   map.on("popupopen", function(e) {
     var openMarker = e.popup._source;

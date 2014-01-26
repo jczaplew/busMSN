@@ -116,6 +116,15 @@ p {
 
 #map {
   height:500px;
+  visibility: hidden;
+}
+#loadingRoot {
+  font-size: 8em;
+  color: #aaa;
+  position: relative;
+  width:100%;
+  text-align: center;
+  margin-top: 14%;
 }
 .bookmark {
   margin-bottom: 1em;
