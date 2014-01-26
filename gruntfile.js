@@ -23,12 +23,12 @@ module.exports = function(grunt) {
         uglify: {
             root: {
                 files: {
-                    'public/js/root.min.js': ['public/js/fastclick.js', 'public/js/root.js']
+                    'public/js/root.min.js': ['public/js/lib/fastclick.js', 'public/js/root.js']
                 }
             },
             arrivals: {
                 files: {
-                    'public/js/arrivals.min.js': ['public/js/fastclick.js', 'public/js/snap.js', 'public/js/arrivals.js']
+                    'public/js/arrivals.min.js': ['public/js/lib/fastclick.js', 'public/js/lib/snap.js', 'public/js/arrivals.js']
                 }
             }
         },
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                 tasks: ['htmlhint']
             },
             js: {
-                files: ['public/js/fastclick.js', 'public/js/snap.js', 'public/js/arrivals.js', 'public/js/root.js'],
+                files: ['public/js/lib/fastclick.js', 'public/js/lib/snap.js', 'public/js/arrivals.js', 'public/js/root.js'],
                 tasks: ['uglify']
             },
             css: {

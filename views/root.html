@@ -61,6 +61,7 @@
               <button class="btn btn-primary bookmark">Create bookmark</button>
             </div>
             <div class="col-sm-8">
+              <div id="loadingRoot"><i class="icon ion-ios7-reloading"></i></div>
               <div id="map"></div>
 
               <div class="selected-stops-div visible-xs">
@@ -118,7 +119,10 @@
       <div id="footer">
         <div class="container">
           <div class="footer-content">
-            <p class="text-muted author"><a href="http://creativecommons.org/about/cc0">CC0</a></p>
+            <p class="text-muted author">
+              <a href="/">busMSN</a>
+              <a href="http://creativecommons.org/about/cc0">CC0</a>
+            </p>
             <a href="https://github.com/jczaplew/busMSN" class="text-muted"><i class="icon ion-social-github"></i></a>
           </div>
         </div>
@@ -126,7 +130,11 @@
 
     </div>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script>window.d3 || document.write('<script src="js/lib/d3.v3.min.js">\x3C/script>')</script>
+
     <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+    <script>window.L || document.write('<script src="js/lib/leaflet.js">\x3C/script>')</script>
+
     <script src="js/root.min.js"></script>
   </body>
 </html>
