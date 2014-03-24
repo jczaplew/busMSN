@@ -1,5 +1,4 @@
 # busMSN
-=====
 
 ### About
 busMSN provides device-agnostic bookmarkable live arrival estimates for [Madison Metro](https://www.cityofmadison.com/metro/) buses using the [SMSMyBus API](http://api.smsmybus.com/). It can be found at [busmsn.com](busmsn.com).
@@ -8,7 +7,7 @@ busMSN provides device-agnostic bookmarkable live arrival estimates for [Madison
 If you're interested in contributing, feel free to submit pull requests! Read below to learn more about contributing.
 
 ### Details
-Because the same repository is used for pushing to Heroku and Github, the ````node_modules```` directory and ````Procfile```` are included in this repository. Additionally, in order to test locally you will need to procure an API key from [SMSMyBus](http://api.smsmybus.com/) and enter it into ````routes/apiKey.js````.
+Because the same repository is used for pushing to Heroku and Github, the ````node_modules```` directory and ````Procfile```` are included. Additionally, in order to test locally you will need to procure an API key from [SMSMyBus](http://api.smsmybus.com/) and enter it into ````routes/apiKey.js````.
 
 busMSN uses Grunt to validate HTML and minify CSS and Javascript. Make sure you have it installed if you would like to contribute (````npm install -g grunt-cli````).
 
