@@ -1,10 +1,9 @@
-
 var express = require('express'),
   cons = require('consolidate'),
   routes = require('./routes/router'),
   app = express();
 
-app.use(express.logger());
+//app.use(express.logger());
 
 // assign the Mustache engine to .html files
 app.engine('html', cons.mustache);
@@ -16,14 +15,11 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 app.use(app.router);
 
-// Point the server to static files in the /public dir
-app.use(express.static(__dirname + '/public'));
-
-
 // GZIP responses
 app.use(express.compress());
 
-app.enable('trust proxy');
+// Point the server to static files in the /public dir
+app.use(express.static(__dirname + '/public'));
 
 // Page routes
 app.get('/', routes.root);

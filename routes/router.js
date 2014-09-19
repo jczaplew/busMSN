@@ -3,6 +3,64 @@ var http = require('http'),
     async = require('async'),
     apiKey = require('./apiKey');
 
+var stop_hash = {};
+(function() {
+  var appRoot = process.cwd(),
+      file = appRoot + '/public/js/stops.geojson';
+
+  fs.readFile(file, 'utf8', function (err, data) {
+    if (err) {
+      console.log('Error: ' + err);
+      return;
+    }
+
+    var stops = JSON.parse(data);
+
+    async.each(stops.features, function(item, callback) {
+      var stop = item.properties;
+      stop.lat = item.geometry.coordinates[1];
+      stop.lng = item.geometry.coordinates[0];
+      stop_hash[stop.id] = stop;
+
+      callback()
+    }, function(){
+      return;
+    });
+  });
+})();
+
+// via http://stackoverflow.com/questions/27928/how-do-i-calculate-distance-between-two-latitude-longitude-points
+// Finds distance between two lat/lons
+function distance(lat1,lon1,lat2,lon2) {
+  var R = 6371000, // Radius of the earth in m
+      dLat = deg2rad(lat2-lat1),  // deg2rad below
+      dLon = deg2rad(lon2-lon1);
+
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)),
+      d = R * c; // Distance in m
+
+  return d;
+}
+
+// Helper for distance()
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+// Sort by distance
+function compare(a,b) {
+  if (a.dist < b.dist)
+     return -1;
+  if (a.dist > b.dist)
+    return 1;
+  return 0;
+}
+
 // Route for root
 exports.root = function(req, res) {
   res.render('root');
@@ -23,9 +81,7 @@ exports.loadArrivals = function(req, res) {
 
   var lat = req.query.lat,
       lng = req.query.lng,
-      requestedStops = req.query.stops;
-
-  requestedStops = requestedStops.split(",");
+      requestedStops = req.query.stops.split(",");
 
   if (requestedStops.length < 1) {
     res.render('error', {
@@ -33,46 +89,88 @@ exports.loadArrivals = function(req, res) {
     });
   }
 
-  var stop_hash = {},
-      stopNames = [],
-      stops,
-      closestStop,
-      closestDist,
-      selectedStop;
+  var stopNames = [];
+    
+  async.waterfall([
+    function(callback) {
+      async.each(requestedStops, function(item, callbackB) {
+        if (stop_hash[item]) {
+          stopNames.push(stop_hash[item]);
+        }
+        callbackB();
+      }, function() {
+        // If the stop IDs supplied are all invalid, send error
+        if (stopNames.length < 1) {
+          callback("Error loading data: none of the supplied stops seem to be valid. Please try again.");
+        } else {
+          callback(null, stopNames);
+        }
+      });
+    },
 
-  getAllStops();
+    function(stopNames, callback) {
+      async.each(stopNames, function(item, callbackB) {
+        var dist = distance(lat, lng, item.lat, item.lng);
+        item.dist = dist;
 
-  function getAllStops(callback) {
-    var appRoot = process.cwd(),
-        file = appRoot + '/public/js/stops.geojson';
- 
-    fs.readFile(file, 'utf8', function (err, data) {
-      if (err) {
-        console.log('Error: ' + err);
-        return;
+        callbackB();
+      }, function() {
+        callback(null, stopNames);
+      });
+    },
+
+    function(stopNames, callback) {
+      stopNames.sort(compare);
+
+      // Make sure we have at least one stop again
+      if (stopNames[0]) {
+        callback(null, stopNames);
+      } else {
+        callback("Error loading data: please provide at least one valid stop.");
       }
+    },
 
-      stops = JSON.parse(data);
-      parseStops(stops);
-    });
+    function(stopNames, callback) {
+      http.get("http://api.smsmybus.com/v1/getarrivals?key=" + apiKey.apiKey + "&stopID=" + stopNames[0].id, function(response) {
+        var body = "";
 
-  }
+        response.on("data", function(chunk) {
+          body += chunk;
+        });
 
-  function parseStops(stops, callback) {
-    async.each(stops.features, function(item, callback) {
-      var stop = item.properties;
-      stop.lat = item.geometry.coordinates[1];
-      stop.lng = item.geometry.coordinates[0];
-      stop_hash[stop.id] = stop;
+        response.on("end", function() {
+          var data = JSON.parse(body);
 
-      callback()
-    }, function(){
-      findSelected();
-    });
+          if (data.status === "-1") {
+            res.render('error_init', {
+              selectStops: stopNames,
+              closestStop: stopNames[0],
+              'message': 'No buses on the horizon :-(. Check a different stop.'
+            });
+          } else {
+            stopNames[0].routes = data.stop.route;
 
-  }
+            callback(null, stopNames);
+          }
+        });
+      });
+    }
 
-  function findSelected(callback) {
+  ], function(error, stopNames) {
+    if (error) {
+      res.render("error", {
+        "message": error
+      });
+    } else {
+      // Create a template and send it pre-rendered!
+      res.render('stop_menu', {
+        selectStops: stopNames,
+        closestStop: stopNames[0],
+        firstBus: stopNames[0].routes[0]
+      });
+    }
+  });
+ /* function findSelected(callback) {
     async.each(requestedStops, function(item, callback) {
       if (stop_hash[item]) {
         stopNames.push(stop_hash[item]);
@@ -174,7 +272,7 @@ exports.loadArrivals = function(req, res) {
         }
       });
     });
-  }
+  }*/
 }
 
 /* Route for getting arrivals for a single stop.
