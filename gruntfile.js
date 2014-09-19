@@ -28,7 +28,7 @@ module.exports = function(grunt) {
             },
             arrivals: {
                 files: {
-                    'public/js/arrivals.min.js': ['public/js/lib/fastclick.js', 'public/js/lib/snap.js', 'public/js/arrivals.js']
+                    'public/js/arrivals.min.js': ['public/js/lib/zepto.min.js', 'public/js/lib/fastclick.js', 'public/js/lib/snap.js', 'public/js/arrivals.js']
                 }
             }
         },
