@@ -16,8 +16,7 @@ var busTimes = (function() {
     });
 
     $("#refresh, #countdown").on("click", function() {
-      var currentStop = $(".navbar-brand").attr("id");
-      busTimes.goToStop(currentStop);
+      busTimes.refreshStop($(".navbar-brand").attr("id"));
     });
 
     $.ajax({
@@ -200,6 +199,25 @@ var busTimes = (function() {
       });
     },
 
+    "refreshStop": function(stop) {
+      busTimes.stopTimer();
+      $("#refresh")
+        .removeClass("ion-ios7-refresh-empty")
+        .addClass("ion-ios7-reloading");
+      $.ajax({
+        url: '/times?id=' + stop,
+        success: function(data) {
+          $("#firstArrivalHolder").html(data);
+          adjustFooter();
+          $(".primaryContent").css("visibility", "visible");
+          busTimes.setTimer();
+          $("#refresh")
+            .removeClass("ion-ios7-reloading")
+            .addClass("ion-ios7-refresh-empty");
+        }
+      });
+    },
+
     "setTimer": function() {
       $("#countdown")
         .css("right", "3.16em")
@@ -219,7 +237,7 @@ var busTimes = (function() {
         if ((refresh - current) < 1) {
           $("#countdown").hide();
           clearInterval(countdown);
-          busTimes.goToStop($(".navbar-brand").attr("id"));
+          busTimes.refreshStop($(".navbar-brand").attr("id"));
         }
       }, 1000);
     },
