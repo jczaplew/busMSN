@@ -105,11 +105,11 @@ p {
   .ion-navicon {
     font-size: 3em;
   }
-  #refresh {
+ /* #refresh {
     right: 0.3em;
     top: 0.55em;
     font-size: 35px;
-  }
+  }*/
 }
 
 /* Start root-specific */

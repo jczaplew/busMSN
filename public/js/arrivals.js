@@ -220,7 +220,6 @@ var busTimes = (function() {
 
     "setTimer": function() {
       $("#countdown")
-        .css("right", "3.16em")
         .show();
 
       var start = new Date().getTime(),
