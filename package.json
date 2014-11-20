@@ -18,10 +18,12 @@
   "author": "John J Czaplewski",
   "license": "CC0",
   "dependencies": {
+    "async": "latest",
+    "consolidate": "latest",
     "express": "3.x",
     "mustache": "latest",
-    "consolidate": "latest",
-    "async": "latest"
+    "turf-distance": "^0.1.5",
+    "turf-point": "^0.1.6"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
