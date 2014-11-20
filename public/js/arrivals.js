@@ -60,6 +60,7 @@ var busTimes = (function() {
   function adjustFooter() {
 
     var height = window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 40;
+    height = Math.abs(height);
     height += "px";
   
     $(".arrivalRow").css("margin-bottom", height);
