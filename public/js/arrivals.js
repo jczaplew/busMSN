@@ -58,14 +58,12 @@ var busTimes = (function() {
   }
 
   function adjustFooter() {
-    $(".arrivalRow").css("padding-bottom", function() {
-      var height = (window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 55);
-      if ($(".arrivalRow").height() > window.innerHeight) {
-        return "0";
-      } else {
-        return height + "px";
-      }
-    });
+
+    var height = window.innerHeight - $(".navbar").height() - $(".arrivalRow").height() - 40;
+    height += "px";
+  
+    $(".arrivalRow").css("margin-bottom", height);
+
     $("#footer").css("visibility", "visible");
   }
 
@@ -165,8 +163,9 @@ var busTimes = (function() {
           getData(lat,lng);
         },
         function(error) {
-          //TODO: Change this so that it asks if you want to try again or not.
-          alert("Error retrieving current location.");
+          if (window.confirm("Error retrieving current location. Would you like to try again?")) {
+            return busTimes.getPosition();
+          }
           // Default to ~ University & Park 
           var lat = 43.07325,
               lng = -89.40074;
