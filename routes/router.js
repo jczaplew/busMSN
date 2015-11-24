@@ -4,10 +4,128 @@ var http = require('http'),
     apiKey = require('./apiKey'),
     distance = require('turf-distance'),
     point = require('turf-point'),
-    stop_hash = {};
+    moment = require('moment'),
+    request = require('request'),
+    cheerio = require('cheerio'),
+    pg = require('pg'),
+    LRU = require('lru-cache'),
+    credentials = require('./credentials'),
+
+// Quickly validate stops
+var stop_hash = {};
+
+// Max cache size of 20mb and max age of 1 minute
+var lruOptions = {
+  max: 20000000,
+  maxAge: 60000
+}
+
+// Define the cache
+var cache = LRU(lruOptions);
+
+function queryPg(sql, params, callback) {
+  pg.connect("postgres://" + credentials.pg.user + "@" + credentials.pg.host + "/" + credentials.pg.database, function(err, client, done) {
+    if (err) {
+      console.log("error connecting - " + err);
+      callback(err);
+    } else {
+      var query = client.query(sql, params, function(err, result) {
+        done();
+        if (err) {
+          console.log("error", err);
+          callback(err);
+        } else {
+          callback(null, result);
+        }
+
+      });
+     // console.log(query);
+    }
+  });
+};
+
+function getTimes(stop_id, cb) {
+  async.waterfall([
+    function(callback) {
+      var cached = cache.get(stop_id);
+
+      if (cached) {
+        console.log('cache hit!')
+        return cb(cached);
+      }
+
+      console.log('cache miss');
+
+      callback(null);
+    },
+
+    function(callback) {
+      queryPg('SELECT rsd.route_id, rsd.direction_id, rsd.stop_id FROM route_stop_directions rsd LEFT JOIN stops_scraped ON stops_scraped.stop_id = rsd.stop_id WHERE stops_scraped.gtfs_id = $1', [stop_id.toString()], function(error, response) {
+        if (error) {
+          console.log(error);
+        }
+        callback(null, response.rows);
+      });
+    },
+
+    function(times, callback) {
+      // This holds the output
+      var out = [];
+
+      async.eachLimit(times, 10, function(tuple, callback) {
+        request('http://webwatch.cityofmadison.com/webwatch/MobileAda.aspx?r=' + tuple.route_id + '&d=' + tuple.direction_id + '&s=' + tuple.stop_id, function(error, response, body) {
+          if (error) {
+            console.log(error);
+          }
+          $ = cheerio.load(body);
+
+          $('div[align=Left]').html().split('<br>').forEach(function(d) {
+            if (!(isNaN(d.trim().substr(0, 1))) && d.trim().length) {
+              var data = d.trim().split(' TO ');
+              var time = data[0].replace(/\./g, '').trim();
+              var until = moment(time, 'hh:mm A').diff(moment(), 'minutes');
+
+              out.push({
+                r: tuple.route_id,
+                d: data[1].trim(),
+                t: time,
+                u: until
+              });
+            }
+          });
+
+          callback(null);
+
+        });
+      }, function(error) {
+        if (error) {
+          callback(error);
+          console.log(error);
+        }
+
+        out.sort(function(a, b) {
+          return a.u - b.u;
+        });
+
+        callback(null, out);
+      });
+    },
+
+    // Set the cache
+    function(times, callback) {
+      cache.set(stop_id, times);
+      callback(null, times);
+    }
+
+  ], function(error, times) {
+    cb(times);
+  });
+
+}
 
 // Read in and parse the stops
 (function() {
+
   var appRoot = process.cwd(),
       file = appRoot + '/public/js/stops.geojson';
 
@@ -46,6 +164,7 @@ exports.root = function(req, res) {
 
 // Route for /a/*
 exports.arrivals = function(req, res) {
+  console.log('send initial');
   res.render('arrivals', {
     partials: {
       header: 'header',
@@ -65,6 +184,7 @@ exports.loadArrivals = function(req, res) {
     res.render('error', {
       'message': 'Error loading data: please provide at least one stop.'
     });
+    return;
   }
 
   var stopNames = [];
@@ -83,6 +203,7 @@ exports.loadArrivals = function(req, res) {
           res.render('error', {
             'message': 'Error loading data: none of the supplied stops seem to be valid. Please try again.'
           });
+          return;
         } else {
           callback(null);
         }
@@ -104,33 +225,21 @@ exports.loadArrivals = function(req, res) {
 
     // Get data from smsmybus API
   ], function(error, result) {
-    http.get('http://api.smsmybus.com/v1/getarrivals?key=' + apiKey.apiKey + '&stopID=' + stopNames[0].id, function(response) {
-      var body = '';
-
-      response.on('data', function(chunk) {
-        body += chunk;
-      });
-
-      response.on('end', function() {
-        var data = JSON.parse(body);
-
-        if (data.status === "-1") {
-          res.render('error_init', {
-            'selectStops': stopNames,
-            'closestStop': stopNames[0],
-            'message': 'No buses on the horizon :-(. Check a different stop.'
-          });
-        } else {
-          stopNames[0].routes = data.stop.route;
-
-          // Create a template and send it pre-rendered!
-          res.render('stop_menu', {
-            'selectStops': stopNames,
-            'closestStop': stopNames[0],
-            'firstBus': stopNames[0].routes[0]
-          });
-        }
-      });
+    getTimes(stopNames[0].id, function(times) {
+      if (!(times.length)) {
+        res.render('error_init', {
+          'selectStops': stopNames,
+          'closestStop': stopNames[0],
+          'message': 'No buses on the horizon :-(. Check a different stop.'
+        });
+      } else {
+        stopNames[0].routes = times;
+        res.render('stop_menu', {
+          'selectStops': stopNames,
+          'closestStop': stopNames[0],
+          'firstBus': times[0]
+        });
+      }
     });
   });
 }
@@ -138,26 +247,10 @@ exports.loadArrivals = function(req, res) {
 /* Route for getting arrivals for a single stop.
    Used when user clicks on stop in sidebar.*/
 exports.times = function(req, res) {
-  http.get('http://api.smsmybus.com/v1/getarrivals?key=' + apiKey.apiKey + '&stopID=' + req.query.id, function(response) {
-    var body = '';
-
-    response.on('data', function(chunk) {
-      body += chunk;
-    });
-
-    response.on('end', function() {
-      var data = JSON.parse(body);
-
-      if (data.status === "-1") {
-        res.render('error', {
-          'message': 'No buses on the horizon :-(. Check a different stop.'
-        });
-      } else {
-        res.render('stop', {
-          'arrivals': data,
-          'firstBus': data.stop.route[0]
-        });
-      }
+  getTimes(req.query.id, function(times) {
+    res.render('stop', {
+      'arrivals': times,
+      'firstBus': times[0]
     });
   });
 }

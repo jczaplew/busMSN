@@ -1,9 +1,9 @@
 <div class="col-sm-12 primaryContent">
   <h3 class="arrival" id="firstRoute">
-    Route {{firstBus.routeID}} <br><small>{{firstBus.destination}}</small>
+    Route {{firstBus.r}} <br><small>{{firstBus.d}}</small>
   </h3>
   <h1 class="arrival" id="first">
-    {{firstBus.minutes}}
+    {{firstBus.u}}
   </h1>
   <p id="minutes">minutes</p>
 </div>
@@ -11,12 +11,12 @@
 <div class="col-sm-4 col-sm-offset-4 primaryContent" id="nextArrivals">
   <table class="table">
     <tbody id="nextArrivalTable">
-      {{#arrivals.stop.route}}
+      {{#arrivals}}
         <tr>
-          <td>Route {{routeID}} <br><small>{{destination}}</small></td>
-          <td>{{minutes}} minutes</td>
+          <td>Route {{r}} <br><small>{{d}}</small></td>
+          <td>{{u}} minutes</td>
         </tr>
-      {{/arrivals.stop.route}}
+      {{/arrivals}}
     </tbody>
   </table>
 </div>

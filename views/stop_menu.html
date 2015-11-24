@@ -1,10 +1,10 @@
 <div id="firstArrivalHolder">
   <div class="col-sm-12 primaryContent">
     <h3 class="arrival" id="firstRoute">
-      Route {{firstBus.routeID}} <br><small>{{firstBus.destination}}</small>
+      Route {{firstBus.r}} <br><small>{{firstBus.d}}</small>
     </h3>
     <h1 class="arrival" id="first">
-      {{firstBus.minutes}}
+      {{firstBus.u}}
     </h1>
     <p id="minutes">minutes</p>
   </div>
@@ -13,8 +13,8 @@
       <tbody id="nextArrivalTable">
         {{#closestStop.routes}}
           <tr>
-            <td>Route {{routeID}} <br><small>{{destination}}</small></td>
-            <td>{{minutes}} minutes</td>
+            <td>Route {{r}} <br><small>{{d}}</small></td>
+            <td>{{u}} minutes</td>
           </tr>
         {{/closestStop.routes}}
       </tbody>
