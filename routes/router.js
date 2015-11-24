@@ -24,7 +24,7 @@ var lruOptions = {
 var cache = LRU(lruOptions);
 
 function queryPg(sql, params, callback) {
-  pg.connect("postgres://" + credentials.pg.user + "@" + credentials.pg.host + "/" + credentials.pg.database, function(err, client, done) {
+  pg.connect("postgres://" + credentials.pg.user + ":" + credentials.pg.password + "@" + credentials.pg.host + "/" + credentials.pg.database, function(err, client, done) {
     if (err) {
       console.log("error connecting - " + err);
       callback(err);
