@@ -9,7 +9,7 @@ var http = require('http'),
     cheerio = require('cheerio'),
     pg = require('pg'),
     LRU = require('lru-cache'),
-    credentials = require('./credentials'),
+    credentials = require('./credentials');
 
 // Quickly validate stops
 var stop_hash = {};
