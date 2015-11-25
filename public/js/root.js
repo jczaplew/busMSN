@@ -20,7 +20,7 @@
 
   var attrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 
-  var stamenLabels = new L.TileLayer('https://stamen-tiles-{S}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {attribution: attrib}).addTo(map);
+  var stamenLabels = new L.TileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {attribution: attrib}).addTo(map);
 
   // Get location
   var options = {
