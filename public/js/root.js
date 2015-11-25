@@ -1,6 +1,6 @@
 (function() {
   FastClick.attach(document.body);
-  
+
   var selectedStops = [],
       selectedMarkers = {},
       stopLayer;
@@ -18,9 +18,9 @@
     maxBounds: bounds
   });
 
-  var attrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+  var attrib = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 
-  var stamenLabels = new L.TileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: attrib}).addTo(map);
+  var stamenLabels = new L.TileLayer('https://stamen-tiles-{S}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {attribution: attrib}).addTo(map);
 
   // Get location
   var options = {
@@ -67,7 +67,7 @@
       marker.data = d.properties;
       stopLayer.addLayer(marker);
     });
-    
+
     stopLayer.addTo(map);
   });
 
@@ -87,7 +87,7 @@
           if (selectedStops.length < 1) {
             d3.selectAll(".selected-stops-title").style("display", "block");
           }
-          
+
           selectedStops.push(openMarker.data.id);
 
           selectedMarkers[openMarker.data.id] = openMarker;
@@ -125,10 +125,10 @@
             fillColor: "#6bb178"
           });
         }
-        
+
       });
   });
-  
+
   // Listener for all the buttons in popups
   d3.selectAll(".select")
     .on("click", function(d) {
@@ -147,7 +147,7 @@
       selectedStops.forEach(function(d) {
         url += d + "/";
       });
-      
+
       url = url.substring(0, url.length - 1);
 
       window.location = url;
